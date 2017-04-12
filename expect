@@ -1,0 +1,111 @@
+#!/bin/bash
+#require this shell absolute path
+path=`pwd`
+dirname $0|grep "\/" >/dev/null
+if [$? -eq 0];
+then
+	path=`dirname $0`
+else
+	dirname $0|grep "\." >/dev/null
+	if [$? -eq 0];
+	then
+		path=`dirname $0|sed "s#^.#path#"`
+	else
+		path=`dirname $0|sed "s#^#path/#"`
+	fi
+fi
+#every virtual machine ip address an password
+ipaddress=()
+passwd=()
+#cycle handle environment
+for ((i=0;i<${#ipaddress[@]};i++))
+{
+  ./rmcache.sh ${ipaddress[i]} root ${passwd[i]}
+}
+#./rmcache.sh 清理目录
+#./scp_tar_file.sh  传送预置包至主机
+#./webins.sh 解压预置包
+#./webtest.sh 测试weblogic是否能够正常启动
+======================================
+具体操作-传输
+======================================
+#!/usr/bin/expect
+#use scp command transport data
+set timeout 60
+set host [lindex $argv 0]
+set username [lindex $argv 1]
+set password [lindex $argv 2]
+spawn scp weblogic.tar.gz $username@$host:/weblogic
+expect {
+ "(yes/no)?"
+  {
+    send "yes\n"
+    expect "*assword:" { send "$password\n"}
+  }
+  "*assword:"
+  {
+   send "$password\n"
+  }
+}
+expect "100%"
+send "exit\r"
+expect eof
+==============================================
+具体操作-清除
+==============================================
+#!/usr/bin/expect
+set timeout 60
+set host [lindex $argv 0]
+set username [lindex $argv 1]
+set password [lindex $argv 2]
+spawn ssh -l $username $host
+expect {
+  "(yes/no)?"
+ {
+  send "yes\n"
+  expect "*assword:" { send "$password\n"}
+ }
+  "*assword:"
+ {
+  send "$password\n"
+ }
+}
+#expect "#"
+#send "su - weblogic -c 'cd /weblogic/;rm -rf *;cd /beshome/weblogic;rm -rf *'\r"
+#expect "#"
+#send "su - uniagent -c 'cd ~/;rm -rf *'\r"
+expect "#"
+#send "su - weblogic -c 'ps -ef | grep weblogic | grep -v grep | cut -c 9-15 | xargs kill -s 9'\r"
+send "ps -ef | grep weblogic | grep -v grep | cut -c 9-15 | xargs kill -s 9\r"
+expect "#"
+send "ps -ef | grep uniagent | grep -v grep | cut -c 9-15 | xargs kill -s 9\r"
+expect "#"
+send "exit\r"
+expect eof
+==================================================
+具体操作-测试
+==================================================
+#!/usr/bin/expect
+set timeout 60
+set host [lindex $argv 0]
+set username [lindex $argv 1]
+set password [lindex $argv 2]
+spawn ssh -l $username $host
+expect {
+  "(yes/no)?"
+ {
+  send "yes\n"
+  expect "*assword:" { send "$password\n"}
+ }
+  "*assword:"
+ {
+  send "$password\n"
+ }
+}
+expect "#"
+send "su - weblogic -c 'cd /beshome/weblogic/Oracle/Middleware/Oracle_Home/user_projects/domains/BES_Domain/bin;./startWebLogic.sh'\r"
+expect "server:"
+send "weblogic\r"
+expect "server:"
+send "NgCrm12#\r"
+interact

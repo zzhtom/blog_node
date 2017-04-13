@@ -1,0 +1,22 @@
+#!/bin/bash
+#require this shell absolute path
+path=`pwd`
+dirname $0|grep "^\/" >/dev/null
+if [ $? -eq 0 ];
+then
+        path=`dirname $0`
+else
+        dirname $0|grep "\." >/dev/null
+        if [ $? -eq 0 ];
+        then
+                path=`dirname $0|sed "s#^.#${path}#"`
+        else
+                if [ "${path}" == "/" ];
+                then
+                        path=`dirname $0|sed "s#^#${path}#"`
+                else
+                        path=`dirname $0|sed "s#^#${path}/#"`
+                fi
+        fi
+fi
+echo ${path}

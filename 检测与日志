@@ -1,0 +1,58 @@
+/**
+	param:
+		$1:时间单位
+		$2:检测次数
+		$3:应用名车
+		$4:服务器IP
+		$5:检测端口
+**/
+checkPortStatus(){
+    typeset time_lenth="$1"
+    typeset time_num="$2"
+    typeset app_name="$3"
+    typeset server_ip="$4"
+    typeset server_port="$5"
+   
+    IsRunning="FALSE"
+    typeset -i checkCount=1
+
+    while [ ${checkCount} -le "${time_num}" ]
+    do
+        besStatus=$(netstat -an | grep -w ${server_port} | grep ${server_ip}:${server_port} | grep "LISTEN")
+        if [ "x" != "x${besStatus}" ]; then
+            IsRunning="TRUE"
+            break
+        fi
+
+        sleep "${time_lenth}"
+        typeset sleep_time=`expr ${checkCount} \* ${time_lenth}`
+        echo "[`date +"%Y%m%d"`] |INFO|:check ${app_name} status for ${sleep_time} seconds....."
+        checkCount=$(${checkCount} + 1)
+    done
+
+    if [ "x${IsRunning}" == "xFALSE" ];then
+        return 1
+    fi
+}
+
+/**
+	param:
+		$1:日志等级（ERROR\DEBUG\INFO）
+		$2:脚本名称
+		$3:日志内容
+		$4:输出的log文件
+**/
+execLog(){
+    execLog_file="$4"
+	SCRIPT_NAME="$2"
+    execLog_level="$1"
+    execLog_content="$3"
+    execLog_time=$(date +"%Y-%m-%d %H:%M:%S")
+
+    if [ ! -f ${execLog_file} ];then
+        echo "${execLog_file} is not exist!"
+        exit 1
+    fi
+
+    echo "[$execLog_time][$execLog_level][$SCRIPT_NAME][$USER]${execLog_content}" | tee -a ${execLog_file}
+}

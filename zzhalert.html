@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+        crossorigin="anonymous">
+    <style>
+        html {
+            font-size: 62.5%;
+            /*10 ÷ 16 × 100% = 62.5%*/
+        }
+
+        body {
+            height: 100rem;
+        }
+
+        .test {
+            background: orange;
+            width: 30rem;
+            height: 30rem;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin: -15rem 0 0 -15rem;
+        }
+
+        .myId {
+            background: gainsboro;
+            width: 30rem;
+            height: 10rem;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            z-index: 11;
+            margin: -10rem 0 0 -10rem;
+            text-align: center;
+        }
+        /*.move {
+            width: 100%;
+            height: 1rem;
+            background: gray;
+        }*/
+
+        .myId .spain {
+            color: dodgerblue;
+            margin: 0 auto;
+            line-height: 10rem;
+        }
+
+        .prompt_box {
+            background: gainsboro;
+            width: 30rem;
+            height: 15rem;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            z-index: 11;
+            margin: -10rem 0 0 -10rem;
+            text-align: right;
+        }
+
+        .prompt_box .bar {
+            background: cornflowerblue;
+            width: 100%;
+            height: 2.5rem;
+        }
+
+        .prompt_box .cls {
+            color: white;
+            margin: 0 auto;
+            line-height: 2.5rem;
+            margin-right: 1rem;
+        }
+    </style>
+    <script>
+        /* window.onload = function () {
+                 var div = document.getElementById("move");
+                 var main = document.getElementById("myId");
+                 var dragFlag = false;
+                 var x, y;
+     
+                 div.onmousedown = function (e) {
+                     e = e || window.event;
+                     x = e.clientX - main.offsetLeft;
+                     y = e.clientY - main.offsetTop;
+                     dragFlag = true;
+                 };
+     
+                 document.onmousemove = function (e) {
+                     if (dragFlag) {
+                         e = e || window.event;
+                         main.style.left = e.clientX - x + "px";
+                         main.style.top = e.clientY - y + "px";
+                     }
+                 };
+     
+                 document.onmouseup = function (e) {
+                     dragFlag = false;
+                 };
+        }*/
+    </script>
+</head>
+
+<body>
+    <div class="test">
+        <input type="button" value="弹出" onclick="show()" />
+        <input type="button" value="消失" onclick="closeS()" />
+        <input type="button" value="弹出Prompt" onclick="showp()" />
+        <input type="button" value="消失Prompt" onclick="closep()" />
+    </div>
+    <!--<div class="myId" >
+        <div id="move" class="move"></div>
+        <i id="spain" class="fa fa-spinner fa-pulse fa-5x"></i>
+    </div>-->
+</body>
+<script>
+    function show() {
+        spain.showSpain();
+    }
+    function closeS() {
+        spain.closeSpain();
+    }
+    function showp() {
+        spain.showPrompt();
+    }
+    function closep() {
+        spain.closePrompt();
+    }
+    var spain = {
+        createSpain: function () {
+            var myId = document.createElement('div');
+            var spain = document.createElement('i');
+            myId.className = "myId";
+            myId.id = "myId";
+            spain.className = "fa fa-spinner fa-pulse fa-5x spain";
+            spain.id = "spain";
+            myId.appendChild(spain);
+            // document.body.appendChild(myId);
+            return myId
+        },
+        showSpain: function () {
+            let mainDiv = document.getElementById('myId');
+            if (mainDiv === '' || mainDiv === undefined || mainDiv === null) {
+                document.body.appendChild(this.createSpain());
+            } else {
+                return;
+            }
+        },
+        closeSpain: function () {
+            /*myId.style.display = 'none';*/
+            let mainDiv = document.getElementById('myId');
+            if (mainDiv === '' || mainDiv === undefined || mainDiv === null) {
+                return;
+            } else {
+                document.body.removeChild(document.getElementById('myId'));
+            }
+        },
+        createPrompt: function () {
+            var prompt = document.createElement('div');
+            var bar = document.createElement('div');
+            var cls = document.createElement('li');
+            prompt.className = "prompt_box";
+            prompt.id = "prompt_box";
+            bar.className = "bar";
+            bar.id = "bar";
+            cls.className = "fa fa-close fa-3x cls";
+            bar.appendChild(cls);
+            prompt.appendChild(bar);
+            return prompt
+        },
+        showPrompt: function () {
+            let mainDiv = document.getElementById('prompt_box');
+            if (mainDiv === '' || mainDiv === undefined || mainDiv === null) {
+                document.body.appendChild(this.createPrompt());
+            } else {
+                return;
+            }
+        },
+        closePrompt: function () {
+            /*myId.style.display = 'none';*/
+            let mainDiv = document.getElementById('prompt_box');
+            if (mainDiv === '' || mainDiv === undefined || mainDiv === null) {
+                return;
+            } else {
+                document.body.removeChild(document.getElementById('prompt_box'));
+            }
+        },
+    }
+
+</script>
+
+</html>

@@ -10,8 +10,8 @@
         crossorigin="anonymous">
     <style>
         html {
-            font-size: 62.5%;
-            /*10 ÷ 16 × 100% = 62.5%*/
+            font-size: 75%;
+            /*12 ÷ 16 × 100% = 75%*/
         }
 
         body {
@@ -34,7 +34,7 @@
             height: 10rem;
             position: fixed;
             left: 50%;
-            top: 50%;
+            top: 30%;
             z-index: 11;
             margin: -10rem 0 0 -10rem;
             text-align: center;
@@ -57,7 +57,7 @@
             height: 15rem;
             position: fixed;
             left: 50%;
-            top: 50%;
+            top: 30%;
             z-index: 11;
             margin: -10rem 0 0 -10rem;
             text-align: center;
@@ -74,6 +74,7 @@
             width: 25rem;
             height: 100%;
             float: left;
+            cursor: move;
         }
 
         .prompt_box .bar .cls {
@@ -96,7 +97,7 @@
             color: royalblue;
             /*background: rgba(red, green, blue, 1);*/
             /*background-color:transparent;*/
-            background-color: rgba(255, 255, 255, 0.5);
+            background-color: rgba(255, 255, 255, 0.8);
             font-size: 2rem;
             width: 5rem;
             padding: 0.1rem;
@@ -104,33 +105,6 @@
             opacity: 0.5;*/
         }
     </style>
-    <script>
-        /* window.onload = function () {
-                 var div = document.getElementById("move");
-                 var main = document.getElementById("myId");
-                 var dragFlag = false;
-                 var x, y;
-     
-                 div.onmousedown = function (e) {
-                     e = e || window.event;
-                     x = e.clientX - main.offsetLeft;
-                     y = e.clientY - main.offsetTop;
-                     dragFlag = true;
-                 };
-     
-                 document.onmousemove = function (e) {
-                     if (dragFlag) {
-                         e = e || window.event;
-                         main.style.left = e.clientX - x + "px";
-                         main.style.top = e.clientY - y + "px";
-                     }
-                 };
-     
-                 document.onmouseup = function (e) {
-                     dragFlag = false;
-                 };
-        }*/
-    </script>
 </head>
 
 <body>
@@ -233,18 +207,33 @@
                     // mainDiv.style.top = y + 'px';
                     let dragX = ev.clientX - mainDiv.offsetLeft;
                     let dragY = ev.clientY - mainDiv.offsetTop;
+                    let winW = document.documentElement.clientWidth || document.body.clientWidth;
+                    let winH = document.documentElement.clientHeight || document.body.clientHeight;
+                    let spaceX = winW - mainDiv.offsetWidth;
+                    let spaceY = winH - mainDiv.offsetHeight;
                     document.onmousemove = function (event) {
                         // document.title = dragX + "," + dragY;
-                        let ev = event || window.event;
-                        mainDiv.style.left = (event.clientX - dragX + 120) + 'px';
-                        mainDiv.style.top = (event.clientY - dragY + 120) + 'px';
+                        let ev = event || window.event,
+                            l = event.clientX - dragX,
+                            t = event.clientY - dragY;
+                        if (l < 0) {
+                            l = 0;
+                        } else if (l > spaceX) {
+                            l = spaceX;
+                        }
+                        if (t < 0) {
+                            t = 0;
+                        } else if (t > spaceY) {
+                            t = spaceY;
+                        }
+                        mainDiv.style.left = (l + 120) + 'px';
+                        mainDiv.style.top = (t + 120) + 'px';
                     }
                     document.onmouseup = function () {
                         document.onmousemove = null;
                     }
 
                 }
-                drag.onmouseover
                 cls.onclick = function () {
                     document.body.removeChild(document.getElementById('prompt_box'));
                 }

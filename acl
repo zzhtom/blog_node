@@ -15,3 +15,4 @@ getfacl -c file
 getfacl --omit-header file
 setfacl -m g:jackuser:r test.sh
 setfacl -m mask::r test.sh 
+test
